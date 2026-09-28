@@ -1,0 +1,165 @@
+{
+  "caption": [
+    {
+      "vibe": "casual",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a relaxed, everyday conversational tone — like you are just chatting with friends.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "casual",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a relaxed, everyday conversational tone — like you are just chatting with friends.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "casual",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a relaxed, everyday conversational tone — like you are just chatting with friends.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "simple",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Keep it minimal and clean — short words, no fluff, just pure vibes.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "simple",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Keep it minimal and clean — short words, no fluff, just pure vibes.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "simple",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Keep it minimal and clean — short words, no fluff, just pure vibes.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "sexy",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Make it sultry, bold, and alluring — confident energy that turns heads.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "sexy",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Make it sultry, bold, and alluring — confident energy that turns heads.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "sexy",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Make it sultry, bold, and alluring — confident energy that turns heads.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "flirty",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a playful, teasing tone — fun, charming, and a little suggestive.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "flirty",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a playful, teasing tone — fun, charming, and a little suggestive.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "flirty",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a playful, teasing tone — fun, charming, and a little suggestive.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "mysterious",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Keep it vague and intriguing — make people curious enough to look twice.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "mysterious",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Keep it vague and intriguing — make people curious enough to look twice.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "mysterious",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Keep it vague and intriguing — make people curious enough to look twice.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "funny",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Make it witty and humorous — a clever joke, pun, or playful roast.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "funny",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Make it witty and humorous — a clever joke, pun, or playful roast.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "funny",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Make it witty and humorous — a clever joke, pun, or playful roast.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "hype",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Go full energy, all caps allowed, maximum excitement — like you are shouting it from a rooftop.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "hype",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Go full energy, all caps allowed, maximum excitement — like you are shouting it from a rooftop.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "hype",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Go full energy, all caps allowed, maximum excitement — like you are shouting it from a rooftop.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "professional",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a polished, brand-friendly tone — clean, sleek, and marketable.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "professional",
+      "length": "medium",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a polished, brand-friendly tone — clean, sleek, and marketable.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "professional",
+      "length": "long",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a polished, brand-friendly tone — clean, sleek, and marketable.\nLENGTH: Use the full Twitter limit — between 200 and 280 characters.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
+    },
+    {
+      "vibe": "nope",
+      "length": "short",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a relaxed, everyday conversational tone — like you are just chatting with friends.\nLENGTH: Keep it VERY short — under 80 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n",
+      "note": "unknown input falls back to casual/medium"
+    },
+    {
+      "vibe": "casual",
+      "length": "nope",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a relaxed, everyday conversational tone — like you are just chatting with friends.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n",
+      "note": "unknown input falls back to casual/medium"
+    },
+    {
+      "vibe": "",
+      "length": "",
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a relaxed, everyday conversational tone — like you are just chatting with friends.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n",
+      "note": "unknown input falls back to casual/medium"
+    },
+    {
+      "vibe": null,
+      "length": null,
+      "prompt": "You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\nTONE: Write in a relaxed, everyday conversational tone — like you are just chatting with friends.\nLENGTH: Keep it moderate — between 100 and 200 characters total.\n\nRules:\n- Use 2-4 emojis placed naturally throughout the caption\n- End with exactly 2 relevant hashtags\n- Do NOT use quotation marks around the caption\n- Return ONLY the raw caption text — no explanation, no labels, no markdown\n",
+      "note": "unknown input falls back to casual/medium"
+    }
+  ],
+  "vibe_prompts": {
+    "casual": "Write in a relaxed, everyday conversational tone — like you are just chatting with friends.",
+    "simple": "Keep it minimal and clean — short words, no fluff, just pure vibes.",
+    "sexy": "Make it sultry, bold, and alluring — confident energy that turns heads.",
+    "flirty": "Write in a playful, teasing tone — fun, charming, and a little suggestive.",
+    "mysterious": "Keep it vague and intriguing — make people curious enough to look twice.",
+    "funny": "Make it witty and humorous — a clever joke, pun, or playful roast.",
+    "hype": "Go full energy, all caps allowed, maximum excitement — like you are shouting it from a rooftop.",
+    "professional": "Write in a polished, brand-friendly tone — clean, sleek, and marketable."
+  },
+  "length_rules": {
+    "short": "Keep it VERY short — under 80 characters total.",
+    "medium": "Keep it moderate — between 100 and 200 characters total.",
+    "long": "Use the full Twitter limit — between 200 and 280 characters."
+  },
+  "outfit": "Focus ONLY on the clothing / outfit / dress visible in this image. Ignore the person wearing it, the background, and everything else. Describe the outfit with maximum precision for use in an AI image generation prompt. Cover:\n- Exact garment type(s)\n- Precise color(s) and any pattern\n- Fabric texture and finish\n- Fit and silhouette\n- Neckline\n- Sleeves\n- Length\n- Notable details: cutouts, embroidery, buttons, zippers, belts, ties, ruffles, sequins\n- Footwear if visible\n- Accessories that are part of the outfit\nOutput as one dense descriptive paragraph with no bullet points or headers.",
+  "_note": "Exact prompts as they existed before caption/outfit were extracted from studio/routes.py into shared modules. Generated by executing the original code, not by hand. tests/test_caption_prompts.py asserts the current implementation still produces these byte for byte."
+}

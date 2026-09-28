@@ -1,101 +1,67 @@
 """Guard the caption/outfit extraction against silent prompt drift.
 
-The caption and outfit prompts were moved out of routes.py so the CLI and the
-browser share one implementation. That is only safe while the strings stay
-byte-identical, so this compares them against the version in git history - a
-refactor that "tidies" a prompt word is caught here rather than in production.
+These prompts were moved out of studio/routes.py so the browser and the CLI
+share one implementation instead of two copies drifting apart. prompts
+must therefore render byte-identically to the pre-refactor originals, which
+tests/prompt_golden.json captures exactly.
+
+If you change a prompt on purpose, regenerate the golden with
+``python _make_golden.py`` and read the diff before committing it.
 """
-import ast
-import subprocess
+import json
+import pathlib
 
 import pytest
 
 from studio import caption, outfit
 
-
-def _committed_routes():
-    r = subprocess.run(['git', 'show', 'HEAD:studio/routes.py'],
-                       capture_output=True, check=False)
-    if r.returncode != 0:
-        pytest.skip('no committed studio/routes.py to compare against')
-    # Must decode as utf-8 explicitly: on Windows subprocess would otherwise use
-    # the cp1252 locale and turn correct em-dashes into fake mojibake.
-    return r.stdout.decode('utf-8')
-
-
-def _tables_from(source):
-    found = {}
-    for node in ast.walk(ast.parse(source)):
-        if isinstance(node, ast.Assign) and len(node.targets) == 1:
-            t = node.targets[0]
-            if isinstance(t, ast.Name) and t.id in ('VIBE_PROMPTS', 'LENGTH_RULES'):
-                found[t.id] = ast.literal_eval(node.value)
-    return found
-
-
-def test_vibe_table_matches_the_committed_original():
-    lit = _tables_from(_committed_routes())
-    assert caption.VIBE_PROMPTS == lit['VIBE_PROMPTS']
-
-
-def test_length_table_matches_the_committed_original():
-    lit = _tables_from(_committed_routes())
-    assert caption.LENGTH_RULES == lit['LENGTH_RULES']
-
-
-@pytest.mark.parametrize('vibe', list(caption.VIBE_PROMPTS) + ['nonsense', '', None])
-@pytest.mark.parametrize('length', list(caption.LENGTH_RULES) + ['nonsense', '', None])
-def test_caption_prompt_is_byte_identical(vibe, length):
-    src = _committed_routes()
-    lit = _tables_from(src)
-
-    v = (vibe or 'casual').lower().strip()
-    ln = (length or 'medium').lower().strip()
-    expected = (
-        f"You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\n"
-        f"TONE: {lit['VIBE_PROMPTS'].get(v, lit['VIBE_PROMPTS']['casual'])}\n"
-        f"LENGTH: {lit['LENGTH_RULES'].get(ln, lit['LENGTH_RULES']['medium'])}\n\n"
-        "Rules:\n"
-        "- Use 2-4 emojis placed naturally throughout the caption\n"
-        "- End with exactly 2 relevant hashtags\n"
-        "- Do NOT use quotation marks around the caption\n"
-        "- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
-    )
-    assert caption.caption_prompt(vibe, length) == expected
-
-
-def test_outfit_prompt_matches_the_committed_original():
-    src = _committed_routes()
-    for node in ast.walk(ast.parse(src)):
-        if isinstance(node, ast.Assign) and any(
-                isinstance(t, ast.Name) and t.id == 'outfit_prompt' for t in node.targets):
-            assert outfit.OUTFIT_PROMPT == ast.literal_eval(node.value)
-            return
-    pytest.skip('outfit_prompt no longer present in the committed routes.py')
+GOLDEN = json.loads(
+    (pathlib.Path(__file__).parent / 'prompt_golden.json').read_text(encoding='utf-8')
+)
 
 
 # --------------------------------------------------------------------------
-# caption module behaviour
+# the tables
 # --------------------------------------------------------------------------
-def test_unknown_vibe_and_length_fall_back_to_defaults():
-    p = caption.caption_prompt('nope', 'nope')
-    assert caption.VIBE_PROMPTS['casual'] in p
-    assert caption.LENGTH_RULES['medium'] in p
+def test_vibe_prompts_match_golden():
+    assert caption.VIBE_PROMPTS == GOLDEN['vibe_prompts']
 
 
+def test_length_rules_match_golden():
+    assert caption.LENGTH_RULES == GOLDEN['length_rules']
+
+
+# --------------------------------------------------------------------------
+# the fully rendered prompts
+# --------------------------------------------------------------------------
+def _ids(cases):
+    return [f"{c['vibe']}|{c['length']}" for c in cases]
+
+
+@pytest.mark.parametrize('case', GOLDEN['caption'], ids=_ids(GOLDEN['caption']))
+def test_caption_prompt_matches_golden(case):
+    assert caption.caption_prompt(case['vibe'], case['length']) == case['prompt']
+
+
+def test_outfit_prompt_matches_golden():
+    assert outfit.OUTFIT_PROMPT == GOLDEN['outfit']
+
+
+def test_golden_covers_every_vibe_and_length():
+    """If someone adds a vibe, the golden should already account for it."""
+    assert set(caption.VIBE_PROMPTS) == set(GOLDEN['vibe_prompts'])
+    assert set(caption.LENGTH_RULES) == set(GOLDEN['length_rules'])
+
+
+# --------------------------------------------------------------------------
+# behaviour
+# --------------------------------------------------------------------------
 def test_caption_prompt_mentions_every_rule():
     p = caption.caption_prompt('hype', 'long')
-    assert 'rooftop' in p                       # hype tone reached the prompt
-    assert 'between 200 and 280 characters.' in p
-
-
-def test_outfit_tidy_strips_markdown_and_truncates():
-    messy = "**Bold** look\n# A heading\n- item one\n- item two   " + "word " * 200
-    out = outfit._tidy(messy)
-    assert '**' not in out
-    assert '#' not in out
-    assert not out.startswith('-')
-    assert len(out) <= outfit.MAX_DESCRIPTION_CHARS + 1
+    assert 'rooftop' in p                                  # tone reached the prompt
+    assert GOLDEN['length_rules']['long'] in p
+    assert '2-4 emojis' in p
+    assert 'exactly 2 relevant hashtags' in p
 
 
 def test_empty_response_raises_empty_caption(tmp_path, monkeypatch):
@@ -119,15 +85,24 @@ def test_write_caption_strips_wrapping_quotes(tmp_path, monkeypatch):
 
 def test_write_caption_rejects_a_missing_model(tmp_path, monkeypatch):
     """A RuntimeError, not an HTTPException: the CLI has no status codes."""
-    monkeypatch.setattr(caption, 'resolve_model', lambda m: None)
+    monkeypatch.setattr(caption, 'resolve_model', lambda m, *a, **k: None)
     with pytest.raises(RuntimeError):
         caption.write_caption(_FakeStudio(), str(_img(tmp_path)))
 
 
 def test_outfit_reports_a_missing_model(tmp_path, monkeypatch):
-    monkeypatch.setattr(outfit, 'resolve_model', lambda m: None)
+    monkeypatch.setattr(outfit, 'resolve_model', lambda m, *a, **k: None)
     with pytest.raises(RuntimeError):
         outfit.describe_outfit(_FakeStudio(), str(_img(tmp_path)))
+
+
+def test_outfit_tidy_strips_markdown_and_truncates():
+    messy = "**Bold** look\n# A heading\n- item one\n- item two   " + "word " * 200
+    out = outfit._tidy(messy)
+    assert '**' not in out
+    assert '#' not in out
+    assert not out.startswith('-')
+    assert len(out) <= outfit.MAX_DESCRIPTION_CHARS + 1
 
 
 def _img(tmp_path):
