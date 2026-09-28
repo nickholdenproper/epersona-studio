@@ -20,6 +20,11 @@ logger = log.get_logger(__name__)
 JOBS_LOCK = threading.Lock()
 JOB = {'running': False, 'kind': None, 'step': '', 'error': None, 'result': None}
 
+# Optional progress sink. The GUI polls /api/job instead, so it leaves this as
+# None; the CLI sets it to print each step to stderr. Same module-level style as
+# JOB, and a misbehaving sink can never break a generation.
+STEP_HOOK = None
+
 
 def start_job(kind, fn):
     with JOBS_LOCK:
@@ -48,6 +53,12 @@ def start_job(kind, fn):
 def set_step(step):
     with JOBS_LOCK:
         JOB['step'] = step
+    hook = STEP_HOOK
+    if hook is not None:
+        try:
+            hook(step)
+        except Exception as e:
+            logger.debug("[PIPELINE] step hook failed: %s", e)
 
 
 REFINE_NOTE = (
@@ -96,13 +107,16 @@ def refine_prompt_text(client_, model, text):
     return out, 'ok'
 
 
-def run_generation():
+def run_generation(studio=None):
     """Two-track pipeline:
     - Track A (pose model set): specialist scans own pose/clothing/env at high precision;
       main model only handles face, mood, skin, age, props — no contradictions possible.
     - Track B (no pose model): main model analyzes everything (original behaviour).
+
+    `studio` is injectable so the CLI can drive its own instance; the HTTP layer
+    and anything else pass nothing and get the shared singleton.
     """
-    st = STUDIO
+    st = studio or STUDIO
     if not st.image_path:
         raise Exception("No image loaded")
 

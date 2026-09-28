@@ -12,6 +12,11 @@ prompt_history.jsonl
 uploads/*
 !uploads/.gitkeep
 
+# ---- CLI output -----------------------------------------------------------
+# `studio avatar` defaults to ./avatar.png
+avatar.png
+*.prompt.txt
+
 # ---- Python ----------------------------------------------------------------
 __pycache__/
 *.py[cod]

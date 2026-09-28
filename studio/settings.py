@@ -106,7 +106,14 @@ class SettingsMixin:
         now, so this is simply an alias of save_settings()."""
         self.save_settings()
 
-    def apply_updates(self, payload: dict):
+    def apply_updates(self, payload: dict, persist: bool = True):
+        """Merge a settings payload onto the Studio state.
+
+        `persist` writes straight to disk. The GUI leaves it on; the CLI turns it
+        off so a one-shot `generate` with `--hair-color` does not silently
+        rewrite the saved profile, and `config set` is the explicit way to
+        persist.
+        """
         simple = {
             'selected_model': 'selected_model',
             'selected_pose_model': 'selected_pose_model',
@@ -166,4 +173,5 @@ class SettingsMixin:
             self.outfit_active = bool(payload['outfit_active'])
         if 'user_notes' in payload and payload['user_notes'] is not None:
             self.user_notes = str(payload['user_notes']).strip()[:1200]
-        self.save_settings()
+        if persist:
+            self.save_settings()

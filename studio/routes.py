@@ -23,7 +23,8 @@ from fastapi.staticfiles import StaticFiles
 from PIL import Image
 
 from . import log
-from .config import (BASE_DIR, GPU_OPTIONS, HAIR_COLOR_PRESETS, HAIRSTYLES,
+from .caption import write_caption_route
+from .config import (BASE_DIR, HAIR_COLOR_PRESETS, HAIRSTYLES,
                      SKIN_TONES, UPLOADS_DIR, UPLOADS_MAX_AGE_DAYS)
 from .florence import FLORENCE, florence_available
 
@@ -31,10 +32,12 @@ from .history import append_history, clear_history, list_history
 from .inject import inject_prompt
 from .ollama import (backend_report, client_for_model, compress_image_b64,
                      list_models, resolve_model)
+from .outfit import describe_outfit_route
 from .pipeline import (JOBS_LOCK, JOB, refine_prompt_text, run_generation,
                        set_step, start_job)
 from .studio import STUDIO
 from .tts import tts_transform
+
 
 logger = log.get_logger(__name__)
 
@@ -316,47 +319,9 @@ def api_outfit_scan():
     st = STUDIO
     if not st.outfit_image_path:
         raise HTTPException(400, "No outfit image uploaded")
-
-    def work():
-        set_step("Scanning outfit...")
-        img_b64 = compress_image_b64(st.outfit_image_path, 896, 85)
-        model = resolve_model(st.selected_model)
-        if not model:
-            # Background job, not a request - the runner surfaces this as the
-            # job error, so a plain exception is correct here.
-            raise RuntimeError(
-                f"{st.selected_model} not found here nor on Ollama Cloud. Run: ollama pull {st.selected_model}"
-            )
-        cli = client_for_model(model)
-        outfit_prompt = (
-            "Focus ONLY on the clothing / outfit / dress visible in this image. "
-            "Ignore the person wearing it, the background, and everything else. "
-            "Describe the outfit with maximum precision for use in an AI image generation prompt. Cover:\n"
-            "- Exact garment type(s)\n- Precise color(s) and any pattern\n- Fabric texture and finish\n"
-            "- Fit and silhouette\n- Neckline\n- Sleeves\n- Length\n"
-            "- Notable details: cutouts, embroidery, buttons, zippers, belts, ties, ruffles, sequins\n"
-            "- Footwear if visible\n- Accessories that are part of the outfit\n"
-            "Output as one dense descriptive paragraph with no bullet points or headers."
-        )
-        outfit_opts = dict(GPU_OPTIONS)
-        outfit_opts['temperature'] = 0.2
-        res = cli.generate(model=model, prompt=outfit_prompt, images=[img_b64],
-                           options=outfit_opts, keep_alive='24h')
-        desc = res['response'].strip()
-        desc = re.sub(r'\*{1,3}([^*]+)\*{1,3}', r'\1', desc)
-        desc = re.sub(r'#+\s*[^\n]+\n?', '', desc)
-        desc = re.sub(r'^\s*[-\*•]\s*', '', desc, flags=re.MULTILINE)
-        desc = re.sub(r'\s+', ' ', desc).strip()
-        if len(desc) > 350:
-            cut = desc[:350]
-            last_dot = cut.rfind('.')
-            desc = cut[:last_dot + 1] if last_dot > 150 else cut.rstrip(',; ')
-        st.outfit_description = desc
-        st.outfit_active = True
-        return {'description': desc}
-
-    start_job('outfit_scan', work)
+    start_job('outfit_scan', describe_outfit_route(st, st.outfit_image_path))
     return {'started': True}
+
 
 
 @app.post("/api/outfit/clear")
@@ -472,69 +437,8 @@ def api_twitter_caption(payload: dict = None):
         payload = {}
     if not TWITTER_IMAGE_PATH or not os.path.exists(TWITTER_IMAGE_PATH):
         raise HTTPException(400, "Upload an image first")
+    return write_caption_route(STUDIO, TWITTER_IMAGE_PATH,
+                               payload.get('vibe'), payload.get('length'))
 
-    vibe = (payload.get('vibe') or 'casual').lower().strip()
-    length = (payload.get('length') or 'medium').lower().strip()
-
-    VIBE_PROMPTS = {
-        'casual': 'Write in a relaxed, everyday conversational tone — like you are just chatting with friends.',
-        'simple': 'Keep it minimal and clean — short words, no fluff, just pure vibes.',
-        'sexy': 'Make it sultry, bold, and alluring — confident energy that turns heads.',
-        'flirty': 'Write in a playful, teasing tone — fun, charming, and a little suggestive.',
-        'mysterious': 'Keep it vague and intriguing — make people curious enough to look twice.',
-        'funny': 'Make it witty and humorous — a clever joke, pun, or playful roast.',
-        'hype': 'Go full energy, all caps allowed, maximum excitement — like you are shouting it from a rooftop.',
-        'professional': 'Write in a polished, brand-friendly tone — clean, sleek, and marketable.',
-    }
-
-    LENGTH_RULES = {
-        'short': 'Keep it VERY short — under 80 characters total.',
-        'medium': 'Keep it moderate — between 100 and 200 characters total.',
-        'long': 'Use the full Twitter limit — between 200 and 280 characters.',
-    }
-
-    vibe_style = VIBE_PROMPTS.get(vibe, VIBE_PROMPTS['casual'])
-    length_rule = LENGTH_RULES.get(length, LENGTH_RULES['medium'])
-
-    caption_prompt = (
-        f"You are a social media expert. Look at this image and write a single catchy Twitter/X caption.\n\n"
-        f"TONE: {vibe_style}\n"
-        f"LENGTH: {length_rule}\n\n"
-        "Rules:\n"
-        "- Use 2-4 emojis placed naturally throughout the caption\n"
-        "- End with exactly 2 relevant hashtags\n"
-        "- Do NOT use quotation marks around the caption\n"
-        "- Return ONLY the raw caption text — no explanation, no labels, no markdown\n"
-    )
-
-    st = STUDIO
-    model = resolve_model(st.selected_model)
-    if not model:
-        raise HTTPException(
-            503,
-            f"{st.selected_model} not found here nor on Ollama Cloud. "
-            f"Run: ollama pull {st.selected_model}"
-        )
-    cli = client_for_model(model)
-
-    img_b64 = compress_image_b64(TWITTER_IMAGE_PATH, size=1280, quality=90)
-
-    opts = dict(GPU_OPTIONS)
-    opts['num_ctx'] = max(opts.get('num_ctx', 8192), 8192)
-    opts['temperature'] = 0.7
-    opts['num_predict'] = 192
-
-    resp = cli.generate(
-        model=model,
-        prompt=caption_prompt,
-        images=[img_b64],
-        options=opts,
-        keep_alive='24h',
-    )
-    caption = (resp.get('response') or '').strip()
-    if not caption:
-        raise HTTPException(502, "Model returned an empty caption")
-    caption = caption.strip('"').strip("'").strip('`')
-    return {'ok': True, 'caption': caption}
 
 
