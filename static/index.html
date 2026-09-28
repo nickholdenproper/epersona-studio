@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ePersona Studio</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand"><span class="logo">&#9678;</span> EPERSONA <b>STUDIO</b></div>
+  <div class="top-controls">
+    <span id="conn-dot" title=""></span>
+    <span id="conn-label">Connecting...</span>
+    <button id="btn-settings" class="btn small ghost">&#9881; Settings</button>
+  </div>
+</header>
+
+<main id="grid">
+
+  <!-- ============ LEFT: source ============ -->
+  <section class="panel" id="panel-source">
+    <h2>Source Image</h2>
+    <div id="dropzone">
+      <img id="src-thumb" alt="" hidden>
+      <div id="dz-hint"><div class="dz-icon">&#8965;</div>Drop photo here<span>or click to browse</span></div>
+    </div>
+    <input type="file" id="file-input" accept="image/*" hidden>
+
+    <div id="pose-chip" hidden>&#127919; <span></span></div>
+
+    <div id="florence-scan" hidden>
+      <div id="florence-status"></div>
+      <pre id="florence-result"></pre>
+    </div>
+
+    <label class="field" id="notes-field">Pose notes / corrections <span class="hint-inline">(highest priority)</span>
+      <textarea id="user-notes" rows="3" spellcheck="false"
+        placeholder="e.g. she is turned around and has a perfect butt sticking out toward the camera"></textarea>
+    </label>
+
+    <button id="btn-generate" class="btn primary big" disabled>&#10022; Generate Prompt</button>
+    <div id="job-status" hidden><span class="spinner"></span><span id="job-step">Working...</span></div>
+
+    <h2>Color Palette</h2>
+    <div id="color-strip" class="empty">No image analyzed yet</div>
+
+    <div class="card" id="outfit-card">
+      <h3>&#128085; Outfit Scanner</h3>
+      <p class="hint">A reference garment photo overrides the clothing detected in the source image.</p>
+      <div id="outfit-drop">
+        <img id="outfit-thumb" alt="" hidden>
+        <span id="outfit-hint">+ Add outfit photo</span>
+        <input type="file" id="outfit-input" accept="image/*" hidden>
+      </div>
+      <div id="outfit-desc" class="mini-text"></div>
+      <div class="row">
+        <button id="btn-outfit-scan" class="btn small" disabled>Scan outfit</button>
+        <button id="btn-outfit-clear" class="btn small ghost" disabled>Clear</button>
+        <label class="switch"><input type="checkbox" id="outfit-active"><span class="track"></span>Apply</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CENTER: body studio ============ -->
+  <section class="panel" id="panel-avatar">
+    <h2>Body Studio</h2>
+    <div id="avatar-wrap">
+      <img id="avatar-img" alt="Avatar preview">
+    </div>
+
+    <div class="slider-row">
+      <label>Breast size<b id="val-bust">50</b></label>
+      <input type="range" id="sl-bust" min="0" max="100" value="50">
+    </div>
+    <div class="slider-row">
+      <label>Hip width<b id="val-hips">50</b></label>
+      <input type="range" id="sl-hips" min="0" max="100" value="50">
+    </div>
+    <div class="slider-row">
+      <label>Hair length<b id="val-len">30</b></label>
+      <input type="range" id="sl-len" min="0" max="100" value="30">
+    </div>
+    <div class="slider-row">
+      <label>Hair brightness<b id="val-bright">100</b></label>
+      <input type="range" id="sl-bright" min="0" max="100" value="100">
+    </div>
+
+    <h2>Hair Color</h2>
+    <div id="hair-presets"></div>
+    <div class="row center gap">
+      <input type="color" id="hair-color" value="#ffffff">
+      <code id="hair-color-label">#FFFFFF</code>
+    </div>
+
+    <h2>Style &amp; Skin</h2>
+    <label class="field">Hairstyle
+      <select id="sel-hairstyle"></select>
+    </label>
+    <label class="field">Ethnicity / Skin tone
+      <select id="sel-skin"></select>
+    </label>
+
+    <h2>Enhancements</h2>
+    <div id="toggles">
+      <label class="switch"><input type="checkbox" id="opt_noise"><span class="track"></span>Film grain</label>
+      <label class="switch"><input type="checkbox" id="opt_dof"><span class="track"></span>Depth of field</label>
+      <label class="switch"><input type="checkbox" id="opt_realism"><span class="track"></span>Skin realism</label>
+      <label class="switch"><input type="checkbox" id="opt_hdr"><span class="track"></span>HDR lighting</label>
+      <label class="switch"><input type="checkbox" id="opt_no_tattoos"><span class="track"></span>No tattoos</label>
+      <label class="switch danger"><input type="checkbox" id="opt_naked"><span class="track"></span>Fully naked</label>
+      <label class="switch"><input type="checkbox" id="opt_safe"><span class="track"></span>Safe wording</label>
+      <label class="switch"><input type="checkbox" id="opt_compact"><span class="track"></span>Compact prompt</label>
+      <label class="switch"><input type="checkbox" id="use_default_details"><span class="track"></span>Default details</label>
+    </div>
+
+    <h2>Prompt Format</h2>
+    <div class="segmented" id="fmt-seg">
+      <button data-mode="Natural Paragraph" class="active">Natural Paragraph</button>
+      <button data-mode="Direct Attributes">Direct Attributes</button>
+      <button data-mode="Soul 2.0">Soul 2.0</button>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: output ============ -->
+  <section class="panel" id="panel-output">
+    <div class="tabs-header">
+      <button class="tab-btn active" id="tab-btn-gen" onclick="switchRightTab('gen')">Prompt Generator</button>
+      <button class="tab-btn" id="tab-btn-inject" onclick="switchRightTab('inject')">Prompt Injector</button>
+      <button class="tab-btn" id="tab-btn-twitter" onclick="switchRightTab('twitter')">&#128038; Twitter Caption</button>
+    </div>
+
+    <!-- TAB 1: Generator -->
+    <div class="tab-pane active" id="pane-gen">
+      <textarea id="prompt-box" spellcheck="false" placeholder="Load an image and press Generate&#10;&#10;The final prompt appears here and can be edited freely before copying."></textarea>
+      <div class="row wrap">
+        <button id="btn-copy" class="btn primary">&#10697; Copy</button>
+        <button id="btn-save" class="btn">&#128190; Save .txt</button>
+        <button id="btn-finalize" class="btn">Finalize</button>
+        <button id="btn-tts" class="btn ghost">TTS Mode</button>
+      </div>
+      <div id="tts-note" class="mini-text" hidden>TTS mode strips body/hair sentences from the prompt and re-inserts your current Body Studio settings.</div>
+
+      <h2>Templates</h2>
+      <div class="row">
+        <select id="sel-template"></select>
+        <button id="btn-tmpl-load" class="btn small">Load</button>
+        <button id="btn-tmpl-del" class="btn small ghost">Delete</button>
+      </div>
+      <div class="row">
+        <input type="text" id="tmpl-name" placeholder="New template name...">
+        <button id="btn-tmpl-save" class="btn small">Save current</button>
+      </div>
+
+      <h2>History</h2>
+      <div id="history-list" class="history-list"><p class="hint">Generated prompts appear here across sessions.</p></div>
+      <div class="row">
+        <button id="btn-history-refresh" class="btn small">Refresh</button>
+        <button id="btn-history-clear" class="btn small ghost">Clear all</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: Injector -->
+    <div class="tab-pane" id="pane-inject">
+      <p class="hint">Paste any external prompt here. The injector will strip its existing body details/hair color and replace them with your current Body Studio configuration.</p>
+      <textarea id="inject-input" spellcheck="false" placeholder="Paste your base prompt here..."></textarea>
+      <div class="row">
+        <button id="btn-inject-run" class="btn primary">&#10022; Inject Settings</button>
+        <button id="btn-inject-clear" class="btn ghost">Clear</button>
+      </div>
+
+      <h2>Injected Output</h2>
+      <textarea id="inject-output" spellcheck="false" readonly placeholder="Your customized prompt will appear here after injecting settings."></textarea>
+      <div class="row">
+        <button id="btn-inject-copy" class="btn primary" disabled>&#10697; Copy Injected</button>
+        <button id="btn-inject-save" class="btn" disabled>&#128190; Save .txt</button>
+      </div>
+    </div>
+
+    <!-- TAB 3: Twitter Caption -->
+    <div class="tab-pane" id="pane-twitter">
+      <p class="hint">Upload an image and get a catchy Twitter caption with emojis and 2 hashtags.</p>
+      <div id="twitter-dropzone">
+        <img id="twitter-thumb" alt="" hidden>
+        <div id="twitter-dz-hint"><div class="dz-icon">&#128247;</div>Drop image here<span>or click to browse</span></div>
+        <input type="file" id="twitter-file-input" accept="image/*" hidden>
+      </div>
+
+      <h2>Vibe</h2>
+      <div class="segmented" id="twitter-vibe-seg">
+        <button data-val="casual" class="active">Casual</button>
+        <button data-val="simple">Simple</button>
+        <button data-val="sexy">Sexy</button>
+        <button data-val="flirty">Flirty</button>
+        <button data-val="mysterious">Mysterious</button>
+        <button data-val="funny">Funny</button>
+        <button data-val="hype">Hype</button>
+        <button data-val="professional">Pro</button>
+      </div>
+
+      <h2>Length</h2>
+      <div class="segmented" id="twitter-len-seg">
+        <button data-val="short">Short</button>
+        <button data-val="medium" class="active">Medium</button>
+        <button data-val="long">Long</button>
+      </div>
+
+      <div class="row">
+        <button id="btn-twitter-gen" class="btn primary" disabled>&#10022; Generate Caption</button>
+        <button id="btn-twitter-clear" class="btn ghost">Clear</button>
+      </div>
+
+      <h2>Twitter Caption</h2>
+      <textarea id="twitter-output" spellcheck="false" readonly placeholder="Your Twitter caption will appear here..."></textarea>
+      <div class="row">
+        <button id="btn-twitter-copy" class="btn primary" disabled>&#10697; Copy Caption</button>
+        <button id="btn-twitter-save" class="btn" disabled>&#128190; Save .txt</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ SETTINGS ============ -->
+<div id="settings-overlay" hidden>
+  <div id="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+
+    <div class="settings-head">
+      <h2 id="settings-title">Settings</h2>
+      <button id="btn-settings-close" class="btn small ghost" title="Close">&#10005;</button>
+    </div>
+
+    <div class="settings-body">
+
+      <section class="settings-group">
+        <h3>Keys</h3>
+        <p class="hint">
+          The cloud key is only used when a local Ollama model cannot be reached.
+          It is stored in <code>settings.json</code> on this machine and is loaded
+          into this panel only while the panel is open. The field is masked — use
+          the eye button to reveal it.
+        </p>
+        <label class="field">Ollama Cloud API key
+          <span class="input-row">
+            <input id="cloud-key" type="password" spellcheck="false" autocomplete="off"
+              placeholder="ollama.com API key (used when local is down)">
+            <button id="btn-key-reveal" class="btn small ghost" title="Show/hide">&#128065;</button>
+          </span>
+        </label>
+        <div class="row">
+          <span id="key-status" class="badge">No key set</span>
+          <button id="btn-key-save" class="btn small primary">Save key</button>
+          <button id="btn-key-clear" class="btn small ghost">Remove</button>
+        </div>
+      </section>
+
+      <section class="settings-group">
+        <h3>Models</h3>
+        <label class="field">Main model
+          <select id="sel-model"></select>
+        </label>
+        <label class="field">VLM Engine
+          <select id="sel-vlm">
+            <option value="Ollama">Ollama</option>
+            <option value="Florence-2">Florence-2</option>
+          </select>
+        </label>
+        <label class="field">Pose / Detail model
+          <select id="sel-pose"></select>
+        </label>
+      </section>
+
+      <section class="settings-group">
+        <h3>Performance</h3>
+        <label class="field">Context length (Ctx)
+          <input id="num-ctx" type="number" min="512" step="512" value="8192">
+        </label>
+        <p class="hint">Higher values use more VRAM. Minimum 8192 is enforced on load.</p>
+      </section>
+
+      <section class="settings-group">
+        <h3>Connection</h3>
+        <div id="conn-detail" class="kv"><p class="hint">Not checked yet.</p></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+fastapi>=0.115.0
+uvicorn[standard]
+pydantic>=2.10.0
+python-multipart
+pillow
+numpy
+ollama
+colorthief
+pywebview
+transformers>=4.45.0,<5.0.0
+torch
+einops
+timm
+pytest>=8.3.0

@@ -1,0 +1,37 @@
+# ---- Secrets & machine-local state ----------------------------------------
+# settings.json holds the Ollama Cloud API key and your personal presets.
+# The app regenerates it from the defaults in studio/studio.py on first run.
+settings.json
+.env
+
+# ---- User content ----------------------------------------------------------
+# Generated prompts (may contain private material).
+prompt_history.jsonl
+
+# ---- Runtime uploads -------------------------------------------------------
+uploads/*
+!uploads/.gitkeep
+
+# ---- Python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+*.egg-info/
+
+# ---- Model / cache artifacts ----------------------------------------------
+*.log
+.cache/
+
+# ---- Editors & OS ----------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
