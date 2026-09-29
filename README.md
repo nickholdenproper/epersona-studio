@@ -241,8 +241,11 @@ python _make_golden.py
 
 ## License
 
-Not yet specified. Until a license is added, the default is "all rights
-reserved" — add one before distributing.
+MIT — see [LICENSE](LICENSE). You can use, modify, and redistribute this,
+including commercially.
+
+The only obligations are to keep the copyright notice and license text in
+copies you distribute, and to disclaim warranty.
 
 ## Contributing
 
