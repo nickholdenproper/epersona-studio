@@ -11,6 +11,10 @@ use. The tool never generates images itself — it produces the *prompt*.
 Both front ends drive the same engine, so a preset saved in the GUI works
 identically from the CLI.
 
+<p align="center">
+  <a href='https://ko-fi.com/B4I827USQY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+</p>
+
 ---
 
 ## What it does
@@ -241,6 +245,15 @@ python _make_golden.py
 - `uploads/` is gitignored so reference photos aren't committed by accident.
 
 ---
+
+## Support
+
+This is MIT-licensed and free to use. If it saves you time, you can support it
+here:
+
+<a href='https://ko-fi.com/B4I827USQY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+No feature is gated behind a donation, and the project stays MIT either way.
 
 ## License
 
