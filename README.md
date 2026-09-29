@@ -26,7 +26,10 @@ identically from the CLI.
   a rule-enforced emoji and hashtag format.
 - **Outfit description** — a structured 7-category description for consistent
   clothing across renders.
-- **Text-to-speech** — speak a draft aloud for hands-free review.
+- **Prompt re-sync** — paste in a prompt from elsewhere and re-insert your
+  current Body Studio settings, stripping the original body and hair text so it
+  doesn't contradict your sliders. (The GUI calls this "TTS Mode"; despite the
+  name it is **not** text-to-speech and produces no audio.)
 - **Local-first** — binds to `127.0.0.1` by default. Your photos and API keys
   stay on your machine.
 
@@ -72,7 +75,7 @@ and progress to **stderr**, so redirects and pipes work as expected:
 ```bash
 studio generate photo.jpg --hair-preset "Auburn Red" --breast 70 > prompt.txt
 studio caption photo.jpg --vibe hype --length short | pbcopy
-studio tts --file draft.txt --no-hdr
+studio tts --file draft.txt            # rewrites the prompt, prints no audio
 ```
 
 ---
@@ -85,7 +88,7 @@ studio tts --file draft.txt --no-hdr
 | `caption` | Twitter/X caption with tone + length |
 | `outfit` | Structured clothing description |
 | `refine` | Re-patch an existing prompt with new settings |
-| `tts` | Speak a draft aloud |
+| `tts` | Re-sync a pasted prompt with your current settings |
 | `inject` | Insert text into a prompt at a section |
 | `avatar` | Save a placeholder portrait |
 | `models` | List locally available Ollama models |
